@@ -2,6 +2,431 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<base target="_top">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#E9689F;--pinkd:#C73A80;--blue:#1E98D6;--blued:#0D6EA3;--navy:#0B4F78;--orange:#C73A80;--ink:#14212B;--line:#CFE3F1;--bg:#F5F9FD;--soft:#F3F9FE;--ok:#0B6B3A;--bad:#A3211B}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Sarabun',sans-serif;font-size:16px;color:var(--ink);background:linear-gradient(180deg,#FDF1F7 0,#F5F9FD 260px) no-repeat var(--bg);min-height:100vh}
+header{background:#fff;box-shadow:0 2px 14px rgba(11,79,120,.10)}
+header .in{max-width:1180px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+header img{height:58px;width:auto;display:block}
+header .t{border-left:3px solid var(--pink);padding-left:18px}
+header h1{margin:0;font-size:21px;color:var(--navy);line-height:1.3}
+header p{margin:2px 0 0;font-size:14px;color:var(--pinkd);font-weight:700}
+header .bar{height:5px;background:linear-gradient(90deg,var(--pink) 0,var(--pink) 40%,var(--blue) 60%,var(--blue) 100%)}
+main{max-width:1180px;margin:0 auto;padding:0 16px 48px}
+nav{display:flex;gap:6px;margin:22px 0 16px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:0 2px 10px rgba(11,79,120,.06);flex-wrap:wrap}
+nav button{flex:1 1 auto;font:inherit;font-weight:700;padding:11px 18px;border:none;border-radius:999px;background:transparent;color:var(--navy);cursor:pointer;transition:background .15s}
+nav button:hover{background:var(--soft)}
+nav button.on{background:linear-gradient(90deg,var(--pinkd),var(--pink));color:#fff;box-shadow:0 3px 10px rgba(199,58,128,.35)}
+nav button[data-t=admin].on{background:linear-gradient(90deg,var(--blued),var(--blue));box-shadow:0 3px 10px rgba(13,110,163,.35)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 6px 24px rgba(11,79,120,.08)}
+h2{margin:0 0 16px;font-size:19px;color:var(--navy);padding-left:12px;border-left:5px solid var(--pink);line-height:1.3}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.full{grid-column:1/-1}
+label{display:block;font-weight:700;font-size:14px;color:var(--navy);margin-bottom:5px}
+label small{font-weight:400;color:var(--ink)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;transition:border-color .15s,box-shadow .15s}
+input[type=file]{padding:8px;background:var(--soft);border-style:dashed;border-color:var(--blue)}
+textarea{min-height:90px;resize:vertical}
+::placeholder{color:#0B4F78;opacity:.85}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,152,214,.22)}
+.btn{font:inherit;font-weight:700;padding:10px 20px;border-radius:999px;border:1.5px solid var(--blued);background:var(--blued);color:#fff;cursor:pointer;transition:transform .1s,box-shadow .15s}
+.btn:hover{box-shadow:0 4px 12px rgba(11,79,120,.25);transform:translateY(-1px)}
+.btn.o{background:linear-gradient(90deg,var(--pinkd),var(--pink));border-color:var(--pinkd)}
+.btn.l{background:#fff;color:var(--blued)}
+.btn.s{padding:7px 14px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px 18px 16px 22px;margin-top:14px;background:#fff;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(11,79,120,.05)}
+.card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--pink),var(--blue))}
+.card h3{margin:0 0 6px;font-size:17px;color:var(--navy)}
+.card p{margin:3px 0;font-size:14.5px}
+.card p b{color:var(--navy)}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:2px 12px;border-radius:999px;background:var(--blued);color:#fff;vertical-align:middle}
+.tag.w{background:var(--pinkd)} .tag.g{background:var(--ok)} .tag.x{background:var(--bad)}
+.inv{margin-top:12px;padding:12px 14px;background:var(--soft);border:1px solid var(--line);border-radius:10px}
+.msg{margin-top:14px;padding:11px 16px;border-radius:10px;font-weight:700;display:none}
+.msg.ok{display:block;background:#E3F4EA;color:var(--ok);border:1px solid var(--ok)}
+.msg.err{display:block;background:#FBE6E4;color:var(--bad);border:1px solid var(--bad)}
+.hide{display:none}
+.tw{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:12px}
+table.list{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
+table.list th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:10px 10px;white-space:nowrap}
+table.list td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink)}
+table.list tr.m:nth-child(4n+1) td{background:var(--soft)}
+table.list td.r,table.list th.r{text-align:right;white-space:nowrap}
+table.list td.n{white-space:nowrap}
+table.list .t1{font-weight:700;color:var(--navy);display:block}
+table.list .tag{margin:1px 0;white-space:nowrap}
+table.list tr.d>td{background:#fff;padding:0 10px 12px}
+table.list tr.d .card{margin-top:8px}
+table.list .act{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-block;margin:3px 4px 3px 0;padding:4px 12px;border-radius:999px;background:var(--blued);color:#fff;font-size:14px;font-weight:700}
+.chip button{font:inherit;font-weight:700;margin-left:6px;border:none;background:none;color:#fff;cursor:pointer}
+.alert{margin-top:14px;padding:14px 18px;border-radius:12px;background:#FDF1F7;border:1.5px solid var(--pink)}
+.alert p{margin:3px 0;font-size:15px}
+a{color:var(--blued);font-weight:700}
+#modal{position:fixed;inset:0;background:rgba(11,79,120,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}
+#modal.on{display:flex}
+#modal .box{background:#fff;border-radius:18px;width:100%;max-width:820px;padding:24px;border-top:6px solid var(--pink);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+iframe{width:100%;height:520px;border:1.5px solid var(--line);border-radius:12px;margin-top:10px;background:#fff}
+footer{text-align:center;font-size:13px;color:var(--navy);font-weight:700;padding:0 16px 24px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}header img{height:44px}header .t{border-left:none;padding-left:0}nav{border-radius:18px}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="in">
+    <img src="data:image/png;base64,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" alt="CULAC – Chulalongkorn University Laboratory Animal Center">
+    <div class="t"><h1>ระบบส่งใบเสนอราคา / ใบแจ้งหนี้</h1><p>Quotation &amp; Invoice Mailing · v12</p></div>
+  </div>
+  <div class="bar"></div>
+</header>
+<main>
+<nav>
+  <button data-t="new" class="on">1. ขอส่งใบเสนอราคา</button>
+  <button data-t="mine">2. รายการใบเสนอราคา / ออกใบแจ้งหนี้</button>
+  <button data-t="admin">ผู้ดูแล (ส่งอีเมล)</button>
+</nav>
+
+<section id="t-new" class="panel">
+  <h2>ขอให้ส่งใบเสนอราคาถึงสปอนเซอร์</h2>
+  <form id="fNew" class="grid">
+    <div class="full"><label>ประเภทงาน *</label><select name="jobType"><option>โครงการบริการวิชาการ</option><option>ค่าบริการรถขนสัตว์</option></select></div>
+    <div class="full"><label>ชื่อโครงการ / งานบริการ * <small>(ภาษาเดียวกับอีเมลที่จะส่ง)</small></label><input name="projectTitle" required></div>
+    <div><label>หน่วยงานสปอนเซอร์ *</label><input name="sponsorOrg" required></div>
+    <div><label>ชื่อผู้ติดต่อ <small>(เช่น Dr. John Smith / คุณสมชาย)</small></label><input name="contactName"></div>
+    <div class="full"><label>อีเมลผู้รับที่ต้องการให้ส่งถึง <small>(หลายคนคั่นด้วย , · งานรถขนส่งสัตว์เว้นว่างได้ หัวหน้างานจะหาอีเมลเอง)</small></label><input name="toEmails"></div>
+    <div class="full"><label>อีเมลสำเนา (CC) <small>(ไม่ต้องใส่อีเมลตนเอง ระบบสำเนาให้อัตโนมัติ)</small></label><input name="ccEmails"></div>
+    <div><label>อ้างถึงบันทึกข้อความ ที่ <small>(ถ้ามี เช่น ศ.579/2569)</small></label><input name="memoRef"></div>
+    <div><label>บันทึกข้อความลงวันที่</label><input name="memoDate" type="date"></div>
+    <div><label>ภาษาของอีเมล</label><select name="lang"><option value="EN">English</option><option value="TH">ภาษาไทย</option></select></div>
+    <div><label>เลขที่ใบเสนอราคา</label><input name="quoteNo"></div>
+    <div><label>จำนวนเงิน</label><input name="amount" inputmode="decimal" placeholder="เช่น 150000"></div>
+    <div><label>สกุลเงิน</label><select name="currency"><option>THB</option><option>USD</option><option>EUR</option><option>JPY</option><option>GBP</option></select></div>
+    <div><label>ยืนราคาถึงวันที่</label><input name="validUntil" type="date"></div>
+    <div><label>ไฟล์ใบเสนอราคา * <small>(PDF แนบได้หลายไฟล์)</small></label><input id="fNewFiles" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"></div>
+    <div class="full"><label>ข้อความที่ต้องการแจ้งสปอนเซอร์เพิ่มเติม <small>(จะแสดงในกรอบ "รายละเอียดเพิ่มเติม" ในอีเมล)</small></label><textarea name="noteToSponsor"></textarea></div>
+    <div class="full row"><button class="btn o" type="submit">ส่งถึงหัวหน้างาน</button></div>
+  </form>
+  <div id="mNew" class="msg"></div>
+</section>
+
+<section id="t-mine" class="panel hide">
+  <h2>รายการใบเสนอราคาทั้งหมด</h2>
+  <p style="margin:0 0 4px">เมื่อลูกค้ายืนยันรายการใด ให้กดปุ่ม <b>"ออกใบแจ้งหนี้ได้เลย"</b> ที่รายการนั้น ระบบจะแจ้งเตือนหัวหน้างานทันที</p>
+  <div class="row" style="margin-top:0"><button class="btn l s" id="bMine">รีเฟรชรายการ</button></div>
+  <div id="mMine" class="msg"></div>
+  <div id="lMine"></div>
+</section>
+
+<section id="t-admin" class="panel hide">
+  <h2>ผู้ดูแล: ตรวจและส่งอีเมล</h2>
+  <div class="row" style="margin-top:0">
+    <input id="pin" type="password" placeholder="รหัสผู้ดูแล" style="max-width:200px">
+    <button class="btn" id="bAdmin">เข้าสู่ระบบ / รีเฟรช</button>
+    <select id="flt" style="max-width:240px">
+      <option value="todo">เฉพาะงานที่รอส่ง</option><option value="all">ทั้งหมด</option>
+    </select>
+    <button class="btn o" id="bNewA">+ เพิ่มงานเอง</button>
+  </div>
+  <div id="mAdmin" class="msg"></div>
+  <div id="aAdmin"></div>
+  <div id="lAdmin"></div>
+</section>
+</main>
+<footer>ศูนย์สัตว์ทดลอง จุฬาลงกรณ์มหาวิทยาลัย · Chulalongkorn University Laboratory Animal Center</footer>
+
+<div id="modal"><div class="box" id="mbox"></div></div>
+
+<script>
+var MAX = 10 * 1024 * 1024, DATA = { mine: [], admin: [] };
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function msg(id,t,ok){var e=$(id);e.textContent=t;e.className='msg '+(t?(ok?'ok':'err'):'')}
+function fail(id,btn){return function(e){if(btn)btn.disabled=false;msg(id,(e&&e.message)||String(e),false)}}
+function dt(s){var m=/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}:\d{2}))?/.exec(s||'');return m?m[3]+'/'+m[2]+'/'+(+m[1]+543)+(m[4]?' '+m[4]:''):''}
+function files(input){
+  var fs=[].slice.call((input&&input.files)||[]);
+  return Promise.all(fs.map(function(f){return new Promise(function(res,rej){
+    if(f.size>MAX)return rej(new Error('ไฟล์ '+f.name+' ใหญ่เกิน 10 MB'));
+    var r=new FileReader();
+    r.onload=function(){res({name:f.name,type:f.type,data:String(r.result).split(',')[1]})};
+    r.onerror=function(){rej(new Error('อ่านไฟล์ไม่ได้: '+f.name))};
+    r.readAsDataURL(f)})}));
+}
+function links(json){var a=[];try{a=JSON.parse(json||'[]')}catch(e){}
+  return a.map(function(f){return '<a href="'+esc(f.url)+'" target="_blank">'+esc(f.name)+'</a>'}).join(' , ')||'-'}
+function tag(s){var c=/รอ/.test(s)?'w':/แล้ว|ตกลง/.test(s)?'g':/ปิด/.test(s)?'x':'';return '<span class="tag '+c+'">'+esc(s)+'</span>'}
+
+[].forEach.call(document.querySelectorAll('nav button'),function(b){b.onclick=function(){
+  [].forEach.call(document.querySelectorAll('nav button'),function(x){x.classList.toggle('on',x===b)});
+  ['new','mine','admin'].forEach(function(t){$('t-'+t).classList.toggle('hide',t!==b.dataset.t)});
+  if(b.dataset.t==='mine')loadMine()}});
+
+
+/* รวมวันที่เป็นข้อความสั้น เช่น 1-3, 7 ต.ค. 69 */
+function fmtDates(list, lang) {
+  var TH = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  var a = (list || []).slice().sort(), groups = [], cur = null;
+  a.forEach(function (d) {
+    var ym = d.slice(0, 7), day = Number(d.slice(8, 10));
+    if (!cur || cur.ym !== ym) { cur = { ym: ym, r: [] }; groups.push(cur); }
+    var last = cur.r[cur.r.length - 1];
+    if (last && last[1] === day - 1) last[1] = day; else cur.r.push([day, day]);
+  });
+  return groups.map(function (g) {
+    var y = Number(g.ym.slice(0, 4)), m = Number(g.ym.slice(5, 7)) - 1;
+    var days = g.r.map(function (x) { return x[0] === x[1] ? x[0] : x[0] + '-' + x[1]; }).join(', ');
+    return days + ' ' + (TH[m] + ' ' + String(y + 543).slice(2));
+  }).join(', ');
+}
+function sd(r){try{var a=JSON.parse(r.serviceDates||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+function iso(t){var d=new Date(t);return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+
+/* ---------- 1. ส่งคำขอ ---------- */
+$('fNew').onsubmit=function(ev){
+  ev.preventDefault();
+  var f=ev.target,btn=f.querySelector('button'),o={};
+  [].forEach.call(f.elements,function(e){if(e.name)o[e.name]=e.value});
+  if(!$('fNewFiles').files.length)return msg('mNew','กรุณาแนบไฟล์ใบเสนอราคา',false);
+  btn.disabled=true;msg('mNew','กำลังส่ง...',true);
+  files($('fNewFiles')).then(function(fl){
+    google.script.run.withSuccessHandler(function(r){
+      btn.disabled=false;f.reset();
+      msg('mNew','ส่งคำขอเรียบร้อย เลขที่ '+r.id+' หัวหน้างานจะตรวจและส่งอีเมลถึงสปอนเซอร์ให้',true);
+    }).withFailureHandler(fail('mNew',btn)).apiSubmitQuote(o,fl);
+  }).catch(fail('mNew',btn));
+};
+
+/* ---------- แสดงรายการ ---------- */
+function card(r,admin){
+  var h='<div class="card"><h3>'+esc(r.projectTitle)+' '+tag(r.status)+'</h3>'+
+    '<p><b>เลขที่คำขอ:</b> '+esc(r.id)+' · <b>วันที่ขอ:</b> '+dt(r.createdAt)+' · <b>ภาษา:</b> '+esc(r.lang)+'</p>'+
+    '<p><b>นักวิจัย:</b> '+esc(r.researcherName)+' ('+esc(r.researcherEmail)+')</p>'+
+    '<p><b>สปอนเซอร์:</b> '+esc(r.sponsorOrg)+(r.contactName?' · '+esc(r.contactName):'')+' · <b>ส่งถึง:</b> '+(r.toEmails?esc(r.toEmails):'<b style="color:var(--bad)">ยังไม่มีอีเมล (หัวหน้างานกรอกตอนส่ง)</b>')+(r.ccEmails?' · <b>CC:</b> '+esc(r.ccEmails):'')+'</p>'+
+    '<p><b>ใบเสนอราคา:</b> '+esc(r.quoteNo||'-')+' · <b>จำนวนเงิน:</b> '+esc(r.amount||'-')+' '+esc(r.currency)+' · <b>ไฟล์:</b> '+links(r.quoteFiles)+'</p>'+
+    (r.noteToSponsor?'<p><b>ข้อความถึงสปอนเซอร์:</b> '+esc(r.noteToSponsor)+'</p>':'')+
+    (r.memoRef||r.memoDate?'<p><b>อ้างถึงบันทึกข้อความ:</b> '+esc(r.memoRef||'-')+(r.memoDate?' · ลงวันที่ '+dt(r.memoDate):'')+'</p>':'')+
+    (sd(r).length?'<p><b>วันที่ใช้บริการรถ:</b> <b style="color:var(--orange)">'+esc(fmtDates(sd(r)))+'</b></p>':'')+
+    (r.quoteSentAt?'<p><b>ส่งใบเสนอราคาเมื่อ:</b> '+dt(r.quoteSentAt)+'</p>':'')+
+    (r.closedReason?'<p><b>เหตุผลที่ปิด:</b> '+esc(r.closedReason)+'</p>':'');
+  (r.invoices||[]).forEach(function(i){
+    h+='<div class="inv"><p><b>ใบแจ้งหนี้</b> '+tag(i.status)+' · ขอเมื่อ '+dt(i.createdAt)+' โดย '+esc(i.requestedBy)+'</p>'+
+      '<p><b>จำนวนเงิน:</b> '+esc(i.amount||'-')+' · <b>PO:</b> '+esc(i.poRef||'-')+(i.invoiceNo?' · <b>เลขที่:</b> '+esc(i.invoiceNo):'')+'</p>'+
+      (i.billingInfo?'<p><b>ออกในนาม:</b> '+esc(i.billingInfo)+'</p>':'')+
+      (i.requestNote?'<p><b>หมายเหตุ:</b> '+esc(i.requestNote)+'</p>':'')+
+      '<p><b>เอกสารอ้างอิง:</b> '+links(i.refFiles)+(i.sentAt?' · <b>ไฟล์ที่ส่ง:</b> '+links(i.invoiceFiles)+' · <b>ส่งเมื่อ:</b> '+dt(i.sentAt):'')+'</p>'+
+      (admin&&i.status==='รอส่งใบแจ้งหนี้'?'<div class="row" style="margin-top:8px"><button class="btn o s" onclick="openSend(\'invoice\',\''+r.id+'\',\''+i.id+'\')">แนบใบแจ้งหนี้และส่งอีเมล</button></div>':'')+
+      '</div>';
+  });
+  var open=r.status!=='รอส่งใบเสนอราคา'&&r.status!=='ปิด-ไม่ดำเนินการ';
+  h+='<div class="row">';
+  if(admin&&r.status!=='ปิด-ไม่ดำเนินการ')h+='<button class="btn '+(r.status==='รอส่งใบเสนอราคา'?'o':'l')+' s" onclick="openSend(\'quote\',\''+r.id+'\')">'+(r.status==='รอส่งใบเสนอราคา'?'ตรวจและส่งใบเสนอราคา':'ส่งใบเสนอราคาซ้ำ')+'</button>';
+  if(!admin&&r.status==='รอส่งใบเสนอราคา')h+='<b>รอหัวหน้างานส่งใบเสนอราคาถึงสปอนเซอร์</b>';
+  if(open)h+='<button class="btn '+(admin?'':'o ')+'s" onclick="'+(admin?'openInvReq':'okInv')+'(\''+r.id+'\','+(admin?1:0)+')">'+(admin?'ออกใบแจ้งหนี้ให้สปอนเซอร์':'ลูกค้ายืนยันแล้ว ออกใบแจ้งหนี้ได้เลย')+'</button>';
+  if(admin)h+='<button class="btn l s" onclick="openEdit(\''+r.id+'\')">แก้ไขข้อมูล</button>';
+  if(admin&&r.status!=='ปิด-ไม่ดำเนินการ')h+='<button class="btn l s" onclick="openDates(\''+r.id+'\')">ระบุวันที่ใช้บริการรถ</button>';
+  if(admin&&r.status!=='ปิด-ไม่ดำเนินการ')h+='<button class="btn l s" onclick="closeReq(\''+r.id+'\')">ปิดรายการ (ไม่ดำเนินการ)</button>';
+  return h+'</div></div>';
+}
+var OPEN={};
+function money(a,c){var n=Number(String(a||'').replace(/,/g,''));return a&&!isNaN(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+(c||''):esc(a||'-')}
+function tog(k){OPEN[k]=!OPEN[k];var e=document.getElementById('d-'+k);if(e)e.classList.toggle('hide',!OPEN[k])}
+function table(list,admin){
+  if(!list.length)return '';
+  var h='<div class="tw"><table class="list"><thead><tr><th>วันที่รับ</th><th>รายการ / ผู้รับ</th><th>เลขที่</th><th class="r">จำนวนเงิน</th><th>วันที่ใช้บริการ</th><th>ส่งถึง</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
+  list.forEach(function(r){
+    var k=(admin?'a':'m')+r.id,inv=r.invoices||[],wait=inv.filter(function(i){return i.status==='รอส่งใบแจ้งหนี้'})[0];
+    var st=tag(r.status)+(r.quoteSentAt?'<br>ส่งเมื่อ '+dt(r.quoteSentAt):'')+inv.map(function(i){return '<br>'+tag(i.status)+(i.sentAt?'<br>ส่งเมื่อ '+dt(i.sentAt):'')}).join('');
+    var act='',closed=r.status==='ปิด-ไม่ดำเนินการ',sent=r.status!=='รอส่งใบเสนอราคา'&&!closed;
+    if(admin&&r.status==='รอส่งใบเสนอราคา')act+='<button class="btn o s" onclick="openSend(\'quote\',\''+r.id+'\')">ส่งใบเสนอราคา</button>';
+    if(admin&&wait)act+='<button class="btn o s" onclick="openSend(\'invoice\',\''+r.id+'\',\''+wait.id+'\')">ส่งใบแจ้งหนี้</button>';
+    if(sent&&!wait)act+='<button class="btn '+(admin?'':'o ')+'s" onclick="'+(admin?'openInvReq':'okInv')+'(\''+r.id+'\','+(admin?1:0)+')">'+(admin?'ออกใบแจ้งหนี้':'ออกใบแจ้งหนี้ได้เลย')+'</button>';
+    if(admin)act+='<button class="btn l s" onclick="openEdit(\''+r.id+'\')">แก้ไข</button>';
+    act+='<button class="btn l s" onclick="tog(\''+k+'\')">รายละเอียด</button>';
+    h+='<tr class="m"><td class="n">'+dt(r.createdAt).slice(0,10)+'</td>'+
+      '<td><span class="tag '+(r.jobType==='ค่าบริการรถขนสัตว์'?'':'w')+'" style="font-size:12px">'+esc(r.jobType||'โครงการบริการวิชาการ')+'</span><span class="t1">'+esc(r.projectTitle)+'</span>'+esc(r.sponsorOrg)+(r.contactName?' · '+esc(r.contactName):'')+'</td>'+
+      '<td class="n">'+esc(r.quoteNo||'-')+'</td><td class="r">'+money(r.amount,r.currency)+'</td>'+
+      '<td>'+(sd(r).length?'<b style="color:var(--orange)">'+esc(fmtDates(sd(r)))+'</b>':'-')+'</td>'+
+      '<td>'+(r.toEmails?esc(r.toEmails).replace(/, /g,'<br>'):'<b style="color:var(--bad)">ยังไม่มีอีเมล</b>')+'</td>'+
+      '<td>'+st+'</td><td><div class="act">'+act+'</div></td></tr>'+
+      '<tr class="d'+(OPEN[k]?'':' hide')+'" id="d-'+k+'"><td colspan="8">'+card(r,admin)+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function loadMine(){
+  msg('mMine','กำลังโหลด...',true);
+  google.script.run.withSuccessHandler(function(l){DATA.mine=l;msg('mMine',l.length?'':'ยังไม่มีรายการใบเสนอราคา',false);
+    $('lMine').innerHTML=table(l,false)}).withFailureHandler(fail('mMine')).apiResearcherList();
+}
+function todo(r){return r.status==='รอส่งใบเสนอราคา'||(r.invoices||[]).some(function(i){return i.status==='รอส่งใบแจ้งหนี้'})}
+function drawAlert(){
+  var t=iso(Date.now()),m=iso(Date.now()+864e5),out=[];
+  DATA.admin.forEach(function(r){if(r.status==='ปิด-ไม่ดำเนินการ')return;var d=sd(r);
+    var w=d.indexOf(t)>=0?'วันนี้':d.indexOf(m)>=0?'พรุ่งนี้':'';
+    if(w)out.push('<p><b>'+w+':</b> '+esc(r.projectTitle)+' · '+esc(r.sponsorOrg)+' · วันที่ใช้บริการ '+esc(fmtDates(d))+'</p>')});
+  $('aAdmin').innerHTML=out.length?'<div class="alert"><p><b style="color:var(--navy)">แจ้งเตือนรถขนส่งสัตว์</b></p>'+out.join('')+'</div>':'';
+}
+function openDates(id){
+  var r=find(id),list=sd(r);
+  show('<h2>วันที่ใช้บริการรถขนส่งสัตว์: '+esc(r.projectTitle)+'</h2><div class="grid">'+
+    '<div class="full"><label>เพิ่มทีละวัน</label><div class="row" style="margin-top:0"><input id="d1" type="date" style="max-width:200px"><button class="btn s" id="dAdd">เพิ่มวัน</button></div></div>'+
+    '<div class="full"><label>เพิ่มหลายวันต่อเนื่อง <small>(ตั้งแต่ – ถึง)</small></label><div class="row" style="margin-top:0"><input id="d2" type="date" style="max-width:200px"><b>ถึง</b><input id="d3" type="date" style="max-width:200px"><button class="btn s" id="dRange">เพิ่มช่วง</button></div></div>'+
+    '<div class="full"><label>วันที่เลือกไว้ <small>(กด × เพื่อลบ)</small></label><div id="dList"></div><p style="margin:8px 0 0"><b>สรุป:</b> <b id="dSum" style="color:var(--orange)"></b></p></div></div>'+
+    '<div id="mD" class="msg"></div><div class="row"><button class="btn o" id="dSave">บันทึก</button><button class="btn l" onclick="hide()">ยกเลิก</button></div>');
+  function draw(){list.sort();$('dList').innerHTML=list.map(function(d,i){return '<span class="chip">'+esc(fmtDates([d]))+'<button data-i="'+i+'" title="ลบ">×</button></span>'}).join('')||'<b>ยังไม่ได้เลือกวัน</b>';
+    $('dSum').textContent=fmtDates(list)||'-';
+    [].forEach.call($('dList').querySelectorAll('button'),function(b){b.onclick=function(){list.splice(+b.dataset.i,1);draw()}})}
+  function add(d){if(d&&list.indexOf(d)<0)list.push(d)}
+  $('dAdd').onclick=function(){if(!$('d1').value)return msg('mD','กรุณาเลือกวันที่',false);msg('mD','');add($('d1').value);draw()};
+  $('dRange').onclick=function(){var a=$('d2').value,b=$('d3').value;
+    if(!a||!b||a>b)return msg('mD','กรุณาเลือกวันเริ่มและวันสิ้นสุดให้ถูกต้อง',false);
+    var x=new Date(a+'T00:00:00Z'),e=new Date(b+'T00:00:00Z');
+    if((e-x)/864e5>92)return msg('mD','ช่วงวันยาวเกิน 3 เดือน',false);
+    msg('mD','');for(;x<=e;x=new Date(x.getTime()+864e5))add(x.toISOString().slice(0,10));draw()};
+  $('dSave').onclick=function(){var b=this;b.disabled=true;msg('mD','กำลังบันทึก...',true);
+    google.script.run.withSuccessHandler(function(){hide();loadAdmin()}).withFailureHandler(fail('mD',b)).apiSetDates($('pin').value,id,list)};
+  draw();
+}
+function drawAdmin(){
+  drawAlert();
+  var l=DATA.admin.filter(function(r){return $('flt').value==='all'||todo(r)});
+  $('lAdmin').innerHTML=table(l,true)||'<p><b>ไม่มีรายการ</b></p>';
+}
+function loadAdmin(){
+  msg('mAdmin','กำลังโหลด...',true);
+  google.script.run.withSuccessHandler(function(l){DATA.admin=l;msg('mAdmin','');drawAdmin()}).withFailureHandler(fail('mAdmin')).apiAdminList($('pin').value);
+}
+$('bMine').onclick=loadMine;$('bAdmin').onclick=loadAdmin;$('flt').onchange=drawAdmin;
+
+/* ---------- หน้าต่าง ---------- */
+function show(html){$('mbox').innerHTML=html;$('modal').classList.add('on')}
+function hide(){$('modal').classList.remove('on');$('mbox').innerHTML=''}
+function find(id){return DATA.admin.concat(DATA.mine).filter(function(r){return r.id===id})[0]}
+
+function okInv(id){
+  var r=find(id);
+  if((r.invoices||[]).some(function(i){return i.status==='รอส่งใบแจ้งหนี้'}))return msg('mMine','รายการนี้แจ้งไว้แล้ว รอหัวหน้างานส่งใบแจ้งหนี้',false);
+  if(!confirm('ยืนยันว่าลูกค้าตอบรับแล้ว\n"'+r.projectTitle+'"\nให้หัวหน้างานออกใบแจ้งหนี้ได้เลย ?'))return;
+  msg('mMine','กำลังแจ้งหัวหน้างาน...',true);
+  google.script.run.withSuccessHandler(function(){
+    google.script.run.withSuccessHandler(function(l){DATA.mine=l;$('lMine').innerHTML=table(l,false);msg('mMine','แจ้งหัวหน้างานเรียบร้อยแล้ว หัวหน้างานจะส่งใบแจ้งหนี้ให้ลูกค้า',true)}).withFailureHandler(fail('mMine')).apiResearcherList();
+  }).withFailureHandler(fail('mMine')).apiRequestInvoice(id,{},{amount:r.amount||''},[]);
+}
+function openInvReq(id,admin){
+  var r=find(id);
+  show('<h2>ขอออกใบแจ้งหนี้: '+esc(r.projectTitle)+'</h2><div class="grid">'+
+    '<div><label>จำนวนเงินที่ให้เรียกเก็บ <small>('+esc(r.currency)+')</small></label><input id="iAmt" value="'+esc(r.amount)+'"></div>'+
+    '<div><label>เลขที่ PO / สัญญาของสปอนเซอร์</label><input id="iPo"></div>'+
+    '<div class="full"><label>ออกใบแจ้งหนี้ในนาม / ที่อยู่ / เลขผู้เสียภาษี</label><textarea id="iBill"></textarea></div>'+
+    '<div class="full"><label>หมายเหตุถึงหัวหน้างาน <small>(เช่น งวดที่ 1 จาก 2)</small></label><textarea id="iNote"></textarea></div>'+
+    '<div class="full"><label>เอกสารยืนยันจากสปอนเซอร์ <small>(อีเมลตอบรับ, PO ถ้ามี)</small></label><input id="iFiles" type="file" multiple></div></div>'+
+    '<div id="mI" class="msg"></div><div class="row"><button class="btn o" id="iGo">ส่งคำขอ</button><button class="btn l" onclick="hide()">ยกเลิก</button></div>');
+  $('iGo').onclick=function(){
+    var b=this;b.disabled=true;msg('mI','กำลังส่ง...',true);
+    var auth=admin?{pin:$('pin').value}:{};
+    var form={amount:$('iAmt').value,poRef:$('iPo').value,billingInfo:$('iBill').value,requestNote:$('iNote').value};
+    files($('iFiles')).then(function(fl){
+      google.script.run.withSuccessHandler(function(){hide();admin?loadAdmin():loadMine()}).withFailureHandler(fail('mI',b)).apiRequestInvoice(id,auth,form,fl);
+    }).catch(fail('mI',b));
+  };
+}
+
+function openSend(kind,reqId,invId){
+  var r=find(reqId),inv=invId?(r.invoices||[]).filter(function(i){return i.id===invId})[0]:null,isInv=kind==='invoice';
+  show('<h2>'+(isInv?'ส่งใบแจ้งหนี้':'ส่งใบเสนอราคา')+': '+esc(r.projectTitle)+'</h2><div class="grid">'+
+    (r.toEmails?'<div class="full"><label>ส่งถึง <small>(ตามอีเมลที่นักวิจัยกรอกไว้)</small></label><p style="margin:0"><b>To:</b> '+esc(r.toEmails)+(r.ccEmails?' · <b>CC:</b> '+esc(r.ccEmails):'')+'</p></div>'
+     :'<div class="full"><label>ส่งถึง (To) * <small>(นักวิจัยไม่ได้ระบุ กรุณากรอกอีเมลผู้รับ หลายคนคั่นด้วย , )</small></label><input id="sTo"></div>'+
+      '<div class="full"><label>สำเนา (CC)</label><input id="sCc"></div>')+
+    (isInv?'<div><label>เลขที่ใบแจ้งหนี้ *</label><input id="sNo"></div>'+
+      '<div><label>กำหนดชำระ</label><input id="sDue" type="date"></div>'+
+      '<div><label>จำนวนเงิน <small>('+esc(r.currency)+')</small></label><input id="sAmt" value="'+esc(inv.amount||r.amount)+'"></div>'+
+      '<div><label>ไฟล์ใบแจ้งหนี้ * <small>(PDF)</small></label><input id="sFiles" type="file" multiple></div>'
+     :'<div class="full"><label>ไฟล์ที่นักวิจัยแนบ</label><p style="margin:0">'+links(r.quoteFiles)+'</p></div>'+
+      '<div class="full"><label>แนบไฟล์เพิ่ม <small>(ถ้ามี)</small></label><input id="sFiles" type="file" multiple></div>')+
+    '<div class="full"><label>หัวเรื่อง <small>(เว้นว่าง = ใช้หัวเรื่องอัตโนมัติ)</small></label><input id="sSub"></div>'+
+    '<div class="full"><label>ข้อความเพิ่มเติมถึงสปอนเซอร์ <small>(ถ้ามี)</small></label><textarea id="sNote" style="min-height:60px"></textarea></div></div>'+
+    '<div class="row"><button class="btn" id="sPrev">① ดูตัวอย่างอีเมล</button><button class="btn o" id="sGo" disabled>② ยืนยันส่งจริง</button><button class="btn l" onclick="hide()">ยกเลิก</button></div>'+
+    '<div id="mS" class="msg"></div><p id="sInfo" style="font-size:14px;margin:10px 0 0"></p><iframe id="sFrame" title="ตัวอย่างอีเมล"></iframe>');
+  var sentTo=r.toEmails;
+  [].forEach.call($('mbox').querySelectorAll('input,textarea'),function(e){e.addEventListener('input',function(){$('sGo').disabled=true})});
+  function p(){var o={kind:kind,reqId:reqId,invId:invId||'',subject:$('sSub').value,extraNote:$('sNote').value};
+    if($('sTo')){o.to=$('sTo').value.trim();o.cc=$('sCc').value.trim()}
+    if(isInv){o.invoiceNo=$('sNo').value.trim();o.dueDate=$('sDue').value;o.amount=$('sAmt').value}return o}
+  function prev(){
+    if($('sTo')&&!$('sTo').value.trim())return msg('mS','กรุณากรอกอีเมลผู้รับ แล้วกด "① ดูตัวอย่างอีเมล"',false);
+    msg('mS','กำลังสร้างตัวอย่าง...',true);$('sGo').disabled=true;
+    google.script.run.withSuccessHandler(function(v){msg('mS','ตรวจตัวอย่างด้านล่าง หากถูกต้องกด "② ยืนยันส่งจริง"',true);$('sGo').disabled=false;sentTo=v.to;
+      $('sInfo').innerHTML='<b>ถึง:</b> '+esc(v.to)+'<br><b>สำเนา:</b> '+esc(v.cc||'-')+'<br><b>หัวเรื่อง:</b> '+esc(v.subject);
+      $('sFrame').srcdoc=v.html}).withFailureHandler(fail('mS')).apiPreview($('pin').value,p());
+  }
+  $('sPrev').onclick=prev;
+  $('sGo').onclick=function(){
+    var b=this,o=p();
+    if(isInv&&!o.invoiceNo)return msg('mS','กรุณากรอกเลขที่ใบแจ้งหนี้',false);
+    if(isInv&&!$('sFiles').files.length)return msg('mS','กรุณาแนบไฟล์ใบแจ้งหนี้',false);
+    if(!confirm('ยืนยันส่งอีเมลจริงถึง '+sentTo+' ?'))return;
+    b.disabled=true;msg('mS','กำลังส่งอีเมล...',true);
+    files($('sFiles')).then(function(fl){
+      google.script.run.withSuccessHandler(function(x){hide();loadAdmin();msg('mAdmin','ส่งอีเมลเรียบร้อย ถึง '+x.sentTo,true)})
+        .withFailureHandler(fail('mS',b)).apiSend($('pin').value,o,fl);
+    }).catch(fail('mS',b));
+  };
+  prev();
+}
+
+function openEdit(id){
+  var r=id?find(id):{lang:'TH',currency:'THB',status:'รอส่งใบเสนอราคา'};
+  var old=[];try{old=JSON.parse(r.quoteFiles||'[]')}catch(e){}
+  function f(k){return esc(r[k]||'')}
+  function opt(list,v){return list.map(function(x){return '<option'+(x===v?' selected':'')+'>'+x+'</option>'}).join('')}
+  show('<h2>'+(id?'แก้ไขข้อมูล: '+f('projectTitle'):'เพิ่มงานเอง (หัวหน้างานกรอก)')+'</h2><div class="grid">'+
+    '<div class="full"><label>ประเภทงาน *</label><select id="eType">'+opt(['โครงการบริการวิชาการ','ค่าบริการรถขนสัตว์'],r.jobType||'โครงการบริการวิชาการ')+'</select></div>'+
+    '<div class="full"><label>ชื่อโครงการ / งานบริการ *</label><input id="eTitle" value="'+f('projectTitle')+'"></div>'+
+    '<div><label>หน่วยงานผู้รับ / สปอนเซอร์ *</label><input id="eOrg" value="'+f('sponsorOrg')+'"></div>'+
+    '<div><label>ชื่อผู้ติดต่อ</label><input id="eCon" value="'+f('contactName')+'"></div>'+
+    '<div class="full"><label>อีเมลผู้รับ <small>(หลายคนคั่นด้วย , · เว้นว่างไว้กรอกตอนส่งได้)</small></label><input id="eTo" value="'+f('toEmails')+'"></div>'+
+    '<div class="full"><label>อีเมลสำเนา (CC)</label><input id="eCc" value="'+f('ccEmails')+'"></div>'+
+    '<div><label>อ้างถึงบันทึกข้อความ ที่ <small>(เช่น ศ.579/2569)</small></label><input id="eMemo" value="'+f('memoRef')+'"></div>'+
+    '<div><label>บันทึกข้อความลงวันที่</label><input id="eMemoD" type="date" value="'+f('memoDate').slice(0,10)+'"></div>'+
+    '<div><label>ภาษาของอีเมล</label><select id="eLang"><option value="TH"'+(r.lang==='TH'?' selected':'')+'>ภาษาไทย</option><option value="EN"'+(r.lang==='EN'?' selected':'')+'>English</option></select></div>'+
+    '<div><label>สถานะ <small>(งานที่ส่งนอกระบบไปแล้ว เลือกสถานะตามจริงได้)</small></label><select id="eSt">'+opt(['รอส่งใบเสนอราคา','ส่งใบเสนอราคาแล้ว','สปอนเซอร์ตกลง','ปิด-ไม่ดำเนินการ'],r.status)+'</select></div>'+
+    '<div><label>เลขที่ใบเสนอราคา</label><input id="eNo" value="'+f('quoteNo')+'"></div>'+
+    '<div><label>ยืนราคาถึงวันที่</label><input id="eVal" type="date" value="'+f('validUntil').slice(0,10)+'"></div>'+
+    '<div><label>จำนวนเงิน</label><input id="eAmt" value="'+f('amount')+'"></div>'+
+    '<div><label>สกุลเงิน</label><select id="eCur">'+opt(['THB','USD','EUR','JPY','GBP'],r.currency||'THB')+'</select></div>'+
+    (id&&old.length?'<div class="full"><label>ไฟล์ที่แนบไว้ <small>(ติ๊ก "ลบ" ที่ไฟล์ที่ไม่ต้องการ แล้วกดบันทึก)</small></label>'+old.map(function(x){return '<p style="margin:4px 0"><label style="display:inline;font-weight:700;color:var(--bad);margin-right:12px"><input type="checkbox" class="eRm" value="'+esc(x.id)+'" style="width:auto;margin-right:4px">ลบ</label><a href="'+esc(x.url)+'" target="_blank">'+esc(x.name)+'</a></p>'}).join('')+'</div>':'')+
+    '<div class="full"><label>'+(id?'แนบไฟล์เพิ่ม':'ไฟล์ใบเสนอราคา <small>(แนบภายหลังตอนส่งได้)</small>')+'</label><input id="eFiles" type="file" multiple></div>'+
+    '<div class="full"><label>ข้อความถึงผู้รับเพิ่มเติม</label><textarea id="eNote">'+f('noteToSponsor')+'</textarea></div></div>'+
+    '<div id="mE" class="msg"></div><div class="row"><button class="btn o" id="eGo">บันทึก</button><button class="btn l" onclick="hide()">ยกเลิก</button></div>');
+  $('eGo').onclick=function(){
+    var b=this,o={projectTitle:$('eTitle').value,sponsorOrg:$('eOrg').value,contactName:$('eCon').value,toEmails:$('eTo').value,ccEmails:$('eCc').value,
+      lang:$('eLang').value,status:$('eSt').value,quoteNo:$('eNo').value,validUntil:$('eVal').value,amount:$('eAmt').value,currency:$('eCur').value,noteToSponsor:$('eNote').value,memoRef:$('eMemo').value,memoDate:$('eMemoD').value,jobType:$('eType').value};
+    o.removeFiles=[].map.call($('mbox').querySelectorAll('.eRm:checked'),function(c){return c.value});
+    if(o.removeFiles.length&&!confirm('ยืนยันลบไฟล์ '+o.removeFiles.length+' ไฟล์ ?'))return;
+    if(!o.projectTitle.trim()||!o.sponsorOrg.trim())return msg('mE','กรุณากรอกชื่องานและหน่วยงานผู้รับ',false);
+    b.disabled=true;msg('mE','กำลังบันทึก...',true);
+    files($('eFiles')).then(function(fl){
+      google.script.run.withSuccessHandler(function(){hide();$('flt').value='all';loadAdmin()}).withFailureHandler(fail('mE',b)).apiAdminSave($('pin').value,id||'',o,fl);
+    }).catch(fail('mE',b));
+  };
+}
+$('bNewA').onclick=function(){openEdit('')};
+
+function closeReq(id){
+  var why=prompt('เหตุผลที่ปิดรายการ (เช่น สปอนเซอร์ไม่ตอบรับ)');if(why===null)return;
+  google.script.run.withSuccessHandler(loadAdmin).withFailureHandler(fail('mAdmin')).apiClose($('pin').value,id,why);
+}
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CULAC – ระบบส่งใบเสนอราคา / ใบแจ้งหนี้</title>
 <script>
